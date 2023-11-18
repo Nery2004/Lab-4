@@ -11,7 +11,7 @@ public class Kayak {
         // Menú para el usuario VIP
         int opcion;
         do {
-            System.out.println("\n--- Menú VIP ---");
+            System.out.println("\n--- Menu VIP ---");
             System.out.println("1. Realizar reserva");
             System.out.println("2. Confirmar reserva");
             System.out.println("3. Modificar perfil");
@@ -32,53 +32,85 @@ public class Kayak {
                     System.out.print("Seleccione aerolínea: ");
                     String aerolinea = scanner.next();
 
+                    // Mostrar información para confirmación
+                    mostrarDatosParaConfirmacion("Reserva", fechaViaje, tipoVuelo, cantidadBoletos, aerolinea);
+
+                    // Confirmar datos
+                    if (!confirmarDatos()) {
+                        break; // Salir del switch y volver al menú principal
+                    }
+
                     // Llamadas a los métodos de la clase ReservaVIP
                     reservaVIP.definirFechaViaje(fechaViaje);
                     reservaVIP.roundTrip(tipoVuelo);
                     reservaVIP.definirCantidadBoletos(cantidadBoletos);
                     reservaVIP.elegirAerolinea(aerolinea);
 
-                    // Aquí podrías mostrar la información de la reserva si lo deseas
                     break;
 
                 case 2:
                     // Confirmar reserva
                     ConfirmacionVIP confirmacionVIP = new ConfirmacionVIP();
-                    System.out.print("Ingrese el número de tarjeta: ");
+                    System.out.print("Ingrese el numero de tarjeta: ");
                     String numeroTarjeta = scanner.next();
                     System.out.print("Seleccione la cantidad de cuotas (1-24): ");
                     int cantidadCuotas = scanner.nextInt();
 
+                    // Mostrar información para confirmación
+                    mostrarDatosParaConfirmacion("Confirmacion", numeroTarjeta, String.valueOf(cantidadCuotas));
+
+                    // Confirmar datos
+                    if (!confirmarDatos()) {
+                        break; // Salir del switch y volver al menú principal
+                    }
+
                     // Llamadas a los métodos de la clase ConfirmacionVIP
                     confirmacionVIP.ingresarNumeroTarjeta(numeroTarjeta);
-                    confirmacionVIP.cantidadCuotas(cantidadCuotas);
+                    confirmacionVIP.definirCantidadCuotas(cantidadCuotas);
 
-                    // Aquí podrías mostrar la información de la confirmación si lo deseas
                     break;
 
                 case 3:
                     // Modificar perfil
                     PerfilVIP perfilVIP = new PerfilVIP();
-                    System.out.println("Seleccione la opción:");
-                    System.out.println("1. Aplicar cupón de descuento");
+                    System.out.println("Seleccione la opcion:");
+                    System.out.println("1. Aplicar cupon de descuento");
                     System.out.println("2. Cambiar contraseña");
                     int opcionModificar = scanner.nextInt();
 
                     switch (opcionModificar) {
                         case 1:
-                            System.out.print("Ingrese el cupón de descuento: ");
+                            System.out.print("Ingrese el cupon de descuento: ");
                             String cuponDescuento = scanner.next();
+
+                            // Mostrar información para confirmación
+                            mostrarDatosParaConfirmacion("CuponDescuento", cuponDescuento);
+
+                            // Confirmar datos
+                            if (!confirmarDatos()) {
+                                break; // Salir del switch y volver al menú principal
+                            }
+
                             perfilVIP.aplicarCuponDescuento(cuponDescuento);
                             break;
 
                         case 2:
                             System.out.print("Ingrese la nueva contraseña: ");
                             String nuevaContraseña = scanner.next();
+
+                            // Mostrar información para confirmación
+                            mostrarDatosParaConfirmacion("CambioContraseña", nuevaContraseña);
+
+                            // Confirmar datos
+                            if (!confirmarDatos()) {
+                                break; // Salir del switch y volver al menú principal
+                            }
+
                             perfilVIP.cambiarContraseña(nuevaContraseña);
                             break;
 
                         default:
-                            System.out.println("Opción no válida");
+                            System.out.println("Opcion no valida");
                             break;
                     }
                     break;
@@ -88,12 +120,27 @@ public class Kayak {
                     break;
 
                 default:
-                    System.out.println("Opción no válida");
+                    System.out.println("Opcion no valida");
                     break;
             }
 
         } while (opcion != 4);
 
         scanner.close();
+    }
+
+    private static void mostrarDatosParaConfirmacion(String tipo, String... datos) {
+        System.out.println("\n--- Confirmación de Datos ---");
+        System.out.println("Tipo: " + tipo);
+        for (int i = 0; i < datos.length; i++) {
+            System.out.println("Dato " + (i + 1) + ": " + datos[i]);
+        }
+    }
+
+    private static boolean confirmarDatos() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("¿Los datos son correctos? (Si/No): ");
+        String respuesta = scanner.next().toLowerCase();
+        return respuesta.equals("si");
     }
 }
